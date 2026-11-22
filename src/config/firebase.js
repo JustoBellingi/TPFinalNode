@@ -11,6 +11,17 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
+// Chequeo al arrancar: si falta alguna variable o quedó con comillas/comas
+// pegadas del firebaseConfig, avisamos en la terminal con un mensaje claro.
+for (const [key, value] of Object.entries(firebaseConfig)) {
+  if (!value) {
+    console.warn(`⚠️  Falta el valor de "${key}" en el archivo .env`);
+  } else if (/["',\s]/.test(value)) {
+    console.warn(`⚠️  "${key}" tiene comillas, comas o espacios: ${JSON.stringify(value)}`);
+  }
+}
+console.log(`Conectando a Firebase, proyecto: ${JSON.stringify(firebaseConfig.projectId)}`);
+
 const app = initializeApp(firebaseConfig);
 
 // Exportamos la instancia de la base de datos para usarla en los modelos
